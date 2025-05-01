@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #Este script permite realizar los controles de calidad para las muestras preprocesadas o procesadas (se adaptó según el procesamiento se había realizado o no)
 
 #-----------------------------------------------------------------------------------------
