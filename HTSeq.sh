@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #Este script permite la cuantificación con HTSeq y procesamiento de lecturas
 
 #Para el conteo de exones se utilizó el comando ‘htseq-count’ en modo ‘intersection-strict’
