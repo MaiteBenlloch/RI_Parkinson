@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #Este script permite la indexación y el mapeo contra el genoma de referencia una vez se descargó.
 #Además, también permite ordenar los archivos BAM e indexarlos
 #Partimos de los archivos de genoma y anotación:
