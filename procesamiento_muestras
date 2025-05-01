@@ -1,0 +1,78 @@
+#Este script parte de los datos descargados del repositorio GEO.
+#Se descargó el archivo de texto 'Accession List', a partir del cual se obtuvieron los archivos '.sra' para cada muestra y se extrajeron los fastqs de cada muestra
+
+
+#-----------------------------------------------------------
+#PROCESAMIENTO DE ARCHIVOS FASTQ
+#-----------------------------------------------------------
+#Fastq processing: adaptor elimination, poli-A elimination,
+#initial bases elimination, base with quality < 30 elimination
+
+
+#Input and output directories
+input_dir=".../analysis/fastqs"
+output_dir=".../analysis/fastqs_processed"
+report_dir=".../analysis/reports_cutadapt"
+
+mkdir -p "$output_dir"
+mkdir -p "$report_dir"
+
+#Iteration over paired FASTQ in the input directory
+
+for file1 in "$input_dir"/*_1.fastq; do
+        #Basename of file w/o suffixes
+        base_name=$(basename "$file1" _1.fastq)
+        file2="$input_dir/${base_name}_2.fastq"
+        if [[ -f "$file2" ]]; then
+                echo "Procesando archivos: $file1 y $file2"
+
+
+                # Adaptor elimination: considering it can be in any place
+                 cutadapt --cores=10 \
+                        -a AGATCGGAAGAG \
+                        -A AGATCGGAAGAG \
+                        --minimum-length 20 \
+                        -o "$output_dir/${base_name}_1_trim.fastq" \
+                        -p "$output_dir/${base_name}_2_trim.fastq" \
+                        "$file1" "$file2" \
+                        > "$report_dir/report_${base_name}_trim.txt"
+
+
+
+                # Poli-A elimination
+                cutadapt --cores=10 \
+                        -a "AAAAAAAAAA" \
+                        -A "AAAAAAAAAA" \
+                        --minimum-length 20 \
+                        -o "$output_dir/${base_name}_1_trim_polyA.fastq" \
+                        -p "$output_dir/${base_name}_2_trim_polyA.fastq" \
+                         "$output_dir/${base_name}_1_trim.fastq" "$output_dir/${base_name}_2_trim.fastq" \
+                        > "$report_dir/report_${base_name}_trim_polyA.txt"
+
+                # Initial bases elimination
+                cutadapt --cores=10 \
+                        -u 25 \
+                        -U 25 \
+                        --minimum-length 20 \
+                        -o "$output_dir/${base_name}_1_trim_polyA_trimmed.fastq" \
+                        -p "$output_dir/${base_name}_2_trim_polyA_trimmed.fastq" \
+                        "$output_dir/${base_name}_1_trim_polyA.fastq" "$output_dir/${base_name}_2_trim_polyA.fastq" \
+                        > "$report_dir/report_${base_name}_trim_polyA_trimmed.txt"
+
+
+                #Quality trimming
+                # Quality trimming
+                cutadapt --cores=10 \
+                        -q 30 -Q 30 -u 3 -U 3 \
+                          --minimum-length 20 \
+                        -o "$output_dir/${base_name}_1_trim_polyA_trimmed_Q.fastq" \
+                        -p "$output_dir/${base_name}_2_trim_polyA_trimmed_Q.fastq" \
+                        "$output_dir/${base_name}_1_trim_polyA_trimmed.fastq" "$output_dir/${base_name}_2_trim_polyA_trimmed.fastq" \
+                        > "$report_dir/report_${base_name}_trim_polyA_trimmed_Q.txt"
+
+        else
+                echo "Archivo emparejado para $file1 no encontrado. Saltando..."
+        fi
+done
+
+echo "Procesamiento completado"
