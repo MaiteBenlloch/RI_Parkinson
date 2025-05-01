@@ -9,9 +9,9 @@
 module load fastqc
 
 
-# Quality analysis per sample + total samples
+# Análisis de calidad por muestra + total de muestras 
 
-# Analysis of all fastq files:
+# Análisis de todos los archivos fastqs:
 
 for file in *.fastq; do
     if [[ -f "$file" ]]; then  
@@ -21,7 +21,7 @@ for file in *.fastq; do
 done
 
 
-# MultiQC in the reports directory
+# MultiQC
 
 echo "Generando informe con MultiQC..."
 multiqc fastqc_reports -o multiqc_report
