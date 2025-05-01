@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #Este script parte de los datos descargados del repositorio GEO.
 #Se descargó el archivo de texto 'Accession List', a partir del cual se obtuvieron los archivos '.sra' para cada muestra y se extrajeron los fastqs de cada muestra
 
