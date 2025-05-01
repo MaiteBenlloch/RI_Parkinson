@@ -2,7 +2,7 @@
 
 #Este script permite la indexación y el mapeo contra el genoma de referencia una vez se descargó.
 #Además, también permite ordenar los archivos BAM e indexarlos
-#Partimos de los archivos de genoma y anotación:
+#Partimos de los archivos de genoma y anotación (que han sido previamente descargados):
 #Homo_sapiens.GRCh38.113.gtf
 #Homo_sapiens.GRCh38.dna.primary_assembly.fa
 
