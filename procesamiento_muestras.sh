@@ -7,11 +7,11 @@
 #-----------------------------------------------------------
 #PROCESAMIENTO DE ARCHIVOS FASTQ
 #-----------------------------------------------------------
-#Fastq processing: adaptor elimination, poli-A elimination,
-#initial bases elimination, base with quality < 30 elimination
+#Procesamiento de fastqs: eliminación de adaptadores y de cola poli-A 
+#eliminación de bases iniciales y procesado por calidad < 30 
 
 
-#Input and output directories
+#Directorios Input y output
 input_dir=".../analysis/fastqs"
 output_dir=".../analysis/fastqs_processed"
 report_dir=".../analysis/reports_cutadapt"
@@ -19,7 +19,7 @@ report_dir=".../analysis/reports_cutadapt"
 mkdir -p "$output_dir"
 mkdir -p "$report_dir"
 
-#Iteration over paired FASTQ in the input directory
+#Iteración sobre los paired FASTQ en el directorio input
 
 for file1 in "$input_dir"/*_1.fastq; do
         #Basename of file w/o suffixes
@@ -29,7 +29,7 @@ for file1 in "$input_dir"/*_1.fastq; do
                 echo "Procesando archivos: $file1 y $file2"
 
 
-                # Adaptor elimination: considering it can be in any place
+                # Eliminación de adaptadores
                  cutadapt --cores=10 \
                         -a AGATCGGAAGAG \
                         -A AGATCGGAAGAG \
@@ -41,7 +41,7 @@ for file1 in "$input_dir"/*_1.fastq; do
 
 
 
-                # Poli-A elimination
+                # Eliminación de cola Poli-A
                 cutadapt --cores=10 \
                         -a "AAAAAAAAAA" \
                         -A "AAAAAAAAAA" \
@@ -51,7 +51,7 @@ for file1 in "$input_dir"/*_1.fastq; do
                          "$output_dir/${base_name}_1_trim.fastq" "$output_dir/${base_name}_2_trim.fastq" \
                         > "$report_dir/report_${base_name}_trim_polyA.txt"
 
-                # Initial bases elimination
+                # Eliminación de bases iniciales 
                 cutadapt --cores=10 \
                         -u 25 \
                         -U 25 \
@@ -62,8 +62,7 @@ for file1 in "$input_dir"/*_1.fastq; do
                         > "$report_dir/report_${base_name}_trim_polyA_trimmed.txt"
 
 
-                #Quality trimming
-                # Quality trimming
+                # Procesado por calidad
                 cutadapt --cores=10 \
                         -q 30 -Q 30 -u 3 -U 3 \
                           --minimum-length 20 \
